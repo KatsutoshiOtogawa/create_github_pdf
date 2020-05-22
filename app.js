@@ -1,17 +1,18 @@
-const puppeteer = require('puppeteer');
+const path = require("path");
+const home = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
+const fs = require("fs");
 
-// const Animal = require('./puppeteer_init.js');
-// var inu  = new Animal('わんわん');
 
+const Blowser = require('./blowser.js');
 
-(async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto('https://github.com/KatsutoshiOtogawa/How_To_add_windows_update_to_WindowsImage', {waitUntil: 'networkidle2'});
-  await page.pdf({path: 'hn.pdf', format: 'A4'});
+const Url = 'https://github.com/KatsutoshiOtogawa/How_To_add_windows_update_to_WindowsImage'
 
-  await browser.close();
-})();
+const pdfPath = path.join(home, "Pictures","create_github_pdf");
 
-// you 
-// /html/body/div[4]/div/main/div[1]/div/div/h1/span[2]/a
+if(!fs.existsSync(pdfPath)){
+    fs.mkdirSync(pdfPath,{recursive: true});
+}
+
+const blowser  = new Blowser(Url,pdfPath);
+
+blowser.invoke();
